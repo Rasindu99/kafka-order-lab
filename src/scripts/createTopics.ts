@@ -1,4 +1,5 @@
 import { kafka } from "../config/kafka";
+import { TOPICS } from "../topics/topic.names";
 
 async function createTopics() {
   const admin = kafka.admin();
@@ -9,21 +10,27 @@ async function createTopics() {
     console.log("Admin connected.");
 
     // This returns true if the topic was created, false if it already exists
+    // In case even one topic already exists, this will return false.
     const created = await admin.createTopics({
       waitForLeaders: true,
       topics: [
         {
-          topic: "test.logs",
+          topic: TOPICS.TEST_LOGS,
           numPartitions: 3,
           replicationFactor: 1,
         },
+        {
+          topic: TOPICS.ORDER_CREATED,
+          numPartitions: 3,
+          replicationFactor: 1,
+        }
       ],
     });
 
     if (created) {
-      console.log('Topic "test.logs" created successfully.');
+      console.log(`Topics created successfully.`);
     } else {
-      console.log('Topic "test.logs" already exists.');
+      console.log('Topics already exist.');
     }
 
     const topics = await admin.listTopics();
