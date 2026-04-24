@@ -23,6 +23,11 @@ async function createTopics() {
           topic: TOPICS.ORDER_CREATED,
           numPartitions: 3,
           replicationFactor: 1,
+        },
+        {
+          topic: TOPICS.PAYMENT_PROCESS,
+          numPartitions: 3,
+          replicationFactor: 1,
         }
       ],
     });

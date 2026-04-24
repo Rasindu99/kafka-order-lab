@@ -8,6 +8,13 @@ export type OrderCreatedPayload = {
   }>;
 };
 
+export type PaymentProcessPayload = {
+  orderId: string;
+  customerId: string;
+  amount: number;
+  paymentStatus: "PENDING";
+}
+
 // Generic <TPayload> Used to make a type reusable.
 
 export type BaseEvent<TPayload> = {
@@ -29,6 +36,21 @@ export function createOrderCreatedEvent(
     eventVersion: 1,
     occurredAt: new Date().toISOString(),
     source: "order-api",
+    key: payload.customerId,
+    payload,
+  };
+}
+
+// We use customerId again as the key so related events for the same customer tend to go to the same partition.
+export function createPaymentProcessEvent(
+  payload: PaymentProcessPayload
+): BaseEvent<PaymentProcessPayload> {
+  return {
+    eventId: `evt-${Date.now()}-${Math.floor(Math.random() * 100000)}`,
+    eventType: "payment.process",
+    eventVersion: 1,
+    occurredAt: new Date().toISOString(),
+    source: "order-created-consumer",
     key: payload.customerId,
     payload,
   };

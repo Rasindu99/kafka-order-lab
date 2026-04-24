@@ -23,6 +23,16 @@ export async function publishOrderCreated(
       ],
     });
 
+    /*
+      when we send events to kafka , events with same event-key goes same partition , but its not guarantee that events with different event-key will go different partition, it depends on the number of partitions and the hashing algorithm used by Kafka to determine the partition for a given key.
+
+      - If the number of partitions is greater than the number of unique keys, then some keys will be 
+        hashed to the same partition, resulting in multiple keys being stored in the same partition.
+
+      - If the number of partitions is less than or equal to the number of unique keys, then each key will 
+        be hashed to a different partition, ensuring that events with different keys are distributed across different partitions.        
+    */
+
     console.log("order.created event published successfully.");
     console.log("Kafka result:", result);
   } catch (error) {

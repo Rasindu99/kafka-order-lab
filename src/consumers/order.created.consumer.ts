@@ -1,5 +1,11 @@
 import { kafka } from "../config/kafka";
 import { TOPICS } from "../topics/topic.names";
+import { 
+  BaseEvent, 
+  OrderCreatedPayload, 
+  createPaymentProcessEvent 
+} from "../utils/event.factory";
+import { publishPaymentProcess } from "../producers/payment.producer";
 
 async function runConsumer() {
   const consumer = kafka.consumer({
@@ -22,7 +28,13 @@ async function runConsumer() {
     await consumer.run({
       eachMessage: async ({ topic, partition, message }) => {
         const rawValue = message.value?.toString() ?? "";
-        const parsedValue = rawValue ? JSON.parse(rawValue) : null;
+
+        if(!rawValue) {
+          console.warn("Received empty message, skipping...");
+          return;
+        }
+
+        const parsedValue = JSON.parse(rawValue) as BaseEvent<OrderCreatedPayload>;
 
         console.log("Received order.created message:");
         console.log({
@@ -33,6 +45,18 @@ async function runConsumer() {
           value: parsedValue,
           timestamp: message.timestamp,
         });
+
+        const paymentEvent = createPaymentProcessEvent({
+          orderId: parsedValue.payload.orderId,
+          customerId: parsedValue.payload.customerId,
+          amount: parsedValue.payload.amount,
+          paymentStatus: "PENDING",
+        });
+
+        await publishPaymentProcess(paymentEvent);
+
+        console.log("Produced payment.process event:");
+        console.log(paymentEvent);
         console.log("--------------------------------------------------");
       },
     });

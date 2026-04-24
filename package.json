@@ -9,6 +9,7 @@
     "produce:test": "ts-node src/producers/testProducer.ts",
     "consume:test": "ts-node src/consumers/testConsumer.ts",
     "consume:orders": "ts-node src/consumers/order.created.consumer.ts",
+    "consume:payments": "ts-node src/consumers/payment.process.consumer.ts",
     "dev": "ts-node-dev --respawn --transpile-only src/api/server.ts"
   },
   "keywords": [],
