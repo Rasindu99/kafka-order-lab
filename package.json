@@ -10,6 +10,8 @@
     "consume:test": "ts-node src/consumers/testConsumer.ts",
     "consume:orders": "ts-node src/consumers/order.created.consumer.ts",
     "consume:payments": "ts-node src/consumers/payment.process.consumer.ts",
+    "consume:payments:completed": "ts-node src/consumers/payment.completed.consumer.ts",
+    "consume:payments:failed": "ts-node src/consumers/payment.failed.consumer.ts",
     "dev": "ts-node-dev --respawn --transpile-only src/api/server.ts"
   },
   "keywords": [],

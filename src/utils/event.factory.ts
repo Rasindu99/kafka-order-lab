@@ -1,3 +1,18 @@
+// Generic <TPayload> Used to make a type reusable.
+export type BaseEvent<TPayload> = {
+  eventId: string;
+  eventType: string;
+  eventVersion: number;
+  occurredAt: string;
+  source: string;
+  key: string;
+  payload: TPayload;
+};
+
+function createEventId(): string {
+  return `evt-${Date.now()}-${Math.floor(Math.random() * 100000)}`;
+}
+
 export type OrderCreatedPayload = {
   orderId: string;
   customerId: string;
@@ -15,23 +30,27 @@ export type PaymentProcessPayload = {
   paymentStatus: "PENDING";
 }
 
-// Generic <TPayload> Used to make a type reusable.
+export type PaymentCompletedPayload = {
+  orderId: string;
+  customerId: string;
+  amount: number;
+  paymentId: string;
+  paymentStatus: "COMPLETED";
+};
 
-export type BaseEvent<TPayload> = {
-  eventId: string;
-  eventType: string;
-  eventVersion: number;
-  occurredAt: string;
-  source: string;
-  key: string;
-  payload: TPayload;
+export type PaymentFailedPayload = {
+  orderId: string;
+  customerId: string;
+  amount: number;
+  reason: string;
+  paymentStatus: "FAILED";
 };
 
 export function createOrderCreatedEvent(
   payload: OrderCreatedPayload
 ): BaseEvent<OrderCreatedPayload> {
   return {
-    eventId: `evt-${Date.now()}-${Math.floor(Math.random() * 100000)}`,
+    eventId: createEventId(),
     eventType: "order.created",
     eventVersion: 1,
     occurredAt: new Date().toISOString(),
@@ -46,11 +65,39 @@ export function createPaymentProcessEvent(
   payload: PaymentProcessPayload
 ): BaseEvent<PaymentProcessPayload> {
   return {
-    eventId: `evt-${Date.now()}-${Math.floor(Math.random() * 100000)}`,
+    eventId: createEventId(),
     eventType: "payment.process",
     eventVersion: 1,
     occurredAt: new Date().toISOString(),
     source: "order-created-consumer",
+    key: payload.customerId,
+    payload,
+  };
+}
+
+export function createPaymentCompletedEvent(
+  payload: PaymentCompletedPayload
+): BaseEvent<PaymentCompletedPayload> {
+  return {
+    eventId: createEventId(),
+    eventType: "payment.completed",
+    eventVersion: 1,
+    occurredAt: new Date().toISOString(),
+    source: "payment-process-consumer",
+    key: payload.customerId,
+    payload,
+  };
+}
+
+export function createPaymentFailedEvent(
+  payload: PaymentFailedPayload
+): BaseEvent<PaymentFailedPayload> {
+  return {
+    eventId: createEventId(),
+    eventType: "payment.failed",
+    eventVersion: 1,
+    occurredAt: new Date().toISOString(),
+    source: "payment-process-consumer",
     key: payload.customerId,
     payload,
   };

@@ -28,6 +28,16 @@ async function createTopics() {
           topic: TOPICS.PAYMENT_PROCESS,
           numPartitions: 3,
           replicationFactor: 1,
+        },
+        {
+          topic: TOPICS.PAYMENT_COMPLETED,
+          numPartitions: 3,
+          replicationFactor: 1
+        },
+        {
+          topic: TOPICS.PAYMENT_FAILED,
+          numPartitions: 3,
+          replicationFactor: 1
         }
       ],
     });
@@ -60,4 +70,14 @@ It does three things:
   * creates a topic called test.logs
   * lists topics to verify it's creation
 
+When you rerun the file after adding a new topic:
+
+  * existing topics are generally unaffected
+  * their messages stay
+  * their offsets stay
+  * only missing topics get added
+  * the returned boolean is not a per-topic report and may be false even when new topics were created
+  * if return is true, all topics were created successfully
+  * if return is false, at least one topic already existed, but new topics may have been created
+  
 '*/
