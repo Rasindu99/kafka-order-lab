@@ -46,6 +46,15 @@ export type PaymentFailedPayload = {
   paymentStatus: "FAILED";
 };
 
+export type NotificationSendPayload = {
+  orderId: string;
+  customerId: string;
+  amount: number;
+  paymentId: string;
+  message: string;
+  channel: "EMAIL";
+}
+
 export function createOrderCreatedEvent(
   payload: OrderCreatedPayload
 ): BaseEvent<OrderCreatedPayload> {
@@ -98,6 +107,20 @@ export function createPaymentFailedEvent(
     eventVersion: 1,
     occurredAt: new Date().toISOString(),
     source: "payment-process-consumer",
+    key: payload.customerId,
+    payload,
+  };
+}
+
+export function createNotificationSendEvent(
+  payload: NotificationSendPayload
+): BaseEvent<NotificationSendPayload> {
+  return {
+    eventId: createEventId(),
+    eventType: "notification.send",
+    eventVersion: 1,
+    occurredAt: new Date().toISOString(),
+    source: "notification-consumer",
     key: payload.customerId,
     payload,
   };

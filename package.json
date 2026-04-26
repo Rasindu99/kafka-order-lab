@@ -12,6 +12,9 @@
     "consume:payments": "ts-node src/consumers/payment.process.consumer.ts",
     "consume:payments:completed": "ts-node src/consumers/payment.completed.consumer.ts",
     "consume:payments:failed": "ts-node src/consumers/payment.failed.consumer.ts",
+    "consume:analytics": "ts-node src/consumers/analytics.consumer.ts",
+    "consume:notifications": "ts-node src/consumers/notification.send.consumer.ts",
+    "consume:notification-send": "ts-node src/consumers/notification.consumer.ts",
     "dev": "ts-node-dev --respawn --transpile-only src/api/server.ts"
   },
   "keywords": [],

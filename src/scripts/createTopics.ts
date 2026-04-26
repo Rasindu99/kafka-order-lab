@@ -38,6 +38,11 @@ async function createTopics() {
           topic: TOPICS.PAYMENT_FAILED,
           numPartitions: 3,
           replicationFactor: 1
+        },
+        {
+          topic: TOPICS.NOTIFICATION_SEND,
+          numPartitions: 3,
+          replicationFactor: 1
         }
       ],
     });

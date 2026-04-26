@@ -4,6 +4,7 @@ export const TOPICS = {
   PAYMENT_PROCESS: "payment.process",
   PAYMENT_COMPLETED: "payment.completed",
   PAYMENT_FAILED: "payment.failed",
+  NOTIFICATION_SEND: "notification.send",
 } as const;
 
 
